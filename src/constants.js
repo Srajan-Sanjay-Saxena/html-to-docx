@@ -1,4 +1,6 @@
-import { cloneDeep } from 'lodash';
+import _ from 'lodash';
+
+const { cloneDeep } = _;
 
 const applicationName = 'html-to-docx';
 const defaultOrientation = 'portrait';

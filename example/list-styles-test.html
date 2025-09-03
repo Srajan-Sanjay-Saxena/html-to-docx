@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test List Styles</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Testing List Styles Inheritance</h1>
+    
+    <h2>Unordered List with Font Styles</h2>
+    <ul style="font-family: 'Verdana', sans-serif; font-size: 12px; color: blue;">
+        <li>Item 1 with Verdana font, 12px size, and blue color</li>
+        <li>Item 2 with same styles
+            <ul style="font-size: 11px; color: green; list-style-type: circle;">
+                <li>Subitem 1 with 11px size and green color</li>
+                <li>Subitem 2 with same styles</li>
+            </ul>
+        </li>
+        <li>Item 3 with inherited styles</li>
+    </ul>
+    
+    <h2>Ordered List with Text Alignment</h2>
+    <ol style="font-family: 'Times New Roman', serif; font-size: 16px; font-weight: bold; text-align: center;">
+        <li>First item centered with Times New Roman, 16px, bold</li>
+        <li>Second item also centered
+            <ol style="font-size: 14px; font-weight: normal; text-align: left;">
+                <li>Nested item with 14px size, normal weight, and left alignment</li>
+                <li>Another nested item</li>
+            </ol>
+        </li>
+        <li>Third item centered</li>
+    </ol>
+    
+    <h2>List with Background Color</h2>
+    <ul style="background-color: yellow; font-family: Arial, sans-serif;">
+        <li>Item with yellow background and Arial font</li>
+        <li>Another item with same background and font</li>
+    </ul>
+    
+    <h2>List with Line Height</h2>
+    <ol style="font-family: 'Courier New', monospace; font-size: 14px; line-height: 2;">
+        <li>Item 1 with double line height</li>
+        <li>Item 2 with same line height</li>
+        <li>Item 3 with same line height</li>
+    </ol>
+</body>
+</html>

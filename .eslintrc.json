@@ -10,6 +10,7 @@
     "default-case": "off",
     "import/no-cycle": "off",
     "no-param-reassign": "off", 
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "import/extensions": ["error", "ignorePackages", { "js": "always", "jsx": "never", "ts": "never", "tsx": "never" }]
   }
 }

@@ -2,8 +2,8 @@
 import JSZip from 'jszip';
 import { minify } from 'html-minifier-terser';
 
-import createDocumentOptionsAndMergeWithDefaults from './src/utils/options-utils';
-import addFilesToContainer from './src/html-to-docx';
+import createDocumentOptionsAndMergeWithDefaults from './src/utils/options-utils.js';
+import addFilesToContainer from './src/html-to-docx.js';
 
 const minifyHTMLString = async (htmlString) => {
   try {

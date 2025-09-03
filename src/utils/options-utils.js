@@ -1,4 +1,4 @@
-import { defaultDocumentOptions } from '../constants';
+import { defaultDocumentOptions } from '../constants.js';
 import {
   pixelRegex,
   pixelToTWIP,
@@ -8,7 +8,7 @@ import {
   inchToTWIP,
   pointRegex,
   pointToHIP,
-} from './unit-conversion';
+} from './unit-conversion.js';
 
 const fixupFontSize = (fontSize) => {
   let normalizedFontSize;

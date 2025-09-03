@@ -1,10 +1,10 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-case-declarations */
 import { fragment } from 'xmlbuilder2';
-import VNode from 'virtual-dom/vnode/vnode';
-import VText from 'virtual-dom/vnode/vtext';
-import isVNode from 'virtual-dom/vnode/is-vnode';
-import isVText from 'virtual-dom/vnode/is-vtext';
+import VNode from 'virtual-dom/vnode/vnode.js';
+import VText from 'virtual-dom/vnode/vtext.js';
+import isVNode from 'virtual-dom/vnode/is-vnode.js';
+import isVText from 'virtual-dom/vnode/is-vtext.js';
 // eslint-disable-next-line import/no-named-default
 import { default as HTMLToVDOM } from 'html-to-vdom';
 import sizeOf from 'image-size';
@@ -12,14 +12,16 @@ import imageToBase64 from 'image-to-base64';
 
 // FIXME: remove the cyclic dependency
 // eslint-disable-next-line import/no-cycle
-import { cloneDeep } from 'lodash';
-import * as xmlBuilder from './xml-builder';
-import namespaces from '../namespaces';
-import { imageType, internalRelationship } from '../constants';
-import { vNodeHasChildren } from '../utils/vnode';
-import { isValidUrl } from '../utils/url';
-import { getMimeType } from '../utils/image';
+import _ from 'lodash';
+import * as xmlBuilder from './xml-builder.js';
 
+import namespaces from '../namespaces.js';
+import { imageType, internalRelationship } from '../constants.js';
+import { vNodeHasChildren } from '../utils/vnode.js';
+import { isValidUrl } from '../utils/url.js';
+import { getMimeType } from '../utils/image.js';
+
+const { cloneDeep } = _;
 const convertHTML = HTMLToVDOM({
   VNode,
   VText,
@@ -47,7 +49,7 @@ export const buildImage = async (docxDocumentInstance, vNode, maximumWidth = nul
     } else {
       base64Uri = decodeURIComponent(vNode.properties.src);
     }
-    
+
     if (base64Uri) {
       response = docxDocumentInstance.createMediaFile(base64Uri);
     } else {
@@ -58,7 +60,7 @@ export const buildImage = async (docxDocumentInstance, vNode, maximumWidth = nul
     console.error(`[ERROR] buildImage: Error during image processing:`, error);
     return null;
   }
-  
+
   if (response) {
     try {
       docxDocumentInstance.zip
@@ -107,12 +109,23 @@ export const buildImage = async (docxDocumentInstance, vNode, maximumWidth = nul
 export const buildList = async (vNode, docxDocumentInstance, xmlFragment) => {
   const listElements = [];
 
+  // Extract styles from the list container element (ul/ol) to apply to all list items
+  // This ensures that styles like font-family, font-size, color, etc. are inherited by list items
+  const listContainerStyles = xmlBuilder.modifiedStyleAttributesBuilder(
+    docxDocumentInstance,
+    vNode,
+    {},
+    { isParagraph: true }
+  );
+
   let vNodeObjects = [
     {
       node: vNode,
       level: 0,
       type: vNode.tagName,
       numberingId: docxDocumentInstance.createNumbering(vNode.tagName, vNode.properties),
+      // Store the container styles to pass down to child elements
+      containerStyles: listContainerStyles,
     },
   ];
   while (vNodeObjects.length) {
@@ -124,9 +137,11 @@ export const buildList = async (vNode, docxDocumentInstance, xmlFragment) => {
       isVText(tempVNodeObject.node) ||
       (isVNode(tempVNodeObject.node) && !['ul', 'ol', 'li'].includes(tempVNodeObject.node.tagName))
     ) {
+      // Pass container styles as base, let buildParagraph handle individual item style overrides
       const paragraphFragment = await xmlBuilder.buildParagraph(
         tempVNodeObject.node,
         {
+          ...tempVNodeObject.containerStyles,
           numbering: { levelId: tempVNodeObject.level, numberingId: tempVNodeObject.numberingId },
         },
         docxDocumentInstance
@@ -142,6 +157,7 @@ export const buildList = async (vNode, docxDocumentInstance, xmlFragment) => {
     ) {
       const tempVNodeObjects = tempVNodeObject.node.children.reduce((accumulator, childVNode) => {
         if (['ul', 'ol'].includes(childVNode.tagName)) {
+          // Handle nested lists - pass down container styles to maintain styling consistency
           accumulator.push({
             node: childVNode,
             level: tempVNodeObject.level + 1,
@@ -150,6 +166,8 @@ export const buildList = async (vNode, docxDocumentInstance, xmlFragment) => {
               childVNode.tagName,
               childVNode.properties
             ),
+            // Pass down the container styles to nested lists
+            containerStyles: tempVNodeObject.containerStyles,
           });
         } else {
           // eslint-disable-next-line no-lonely-if
@@ -202,6 +220,8 @@ export const buildList = async (vNode, docxDocumentInstance, xmlFragment) => {
               level: tempVNodeObject.level,
               type: tempVNodeObject.type,
               numberingId: tempVNodeObject.numberingId,
+              // Pass down the container styles to individual list items
+              containerStyles: tempVNodeObject.containerStyles,
             });
           }
         }
@@ -297,10 +317,19 @@ async function findXMLEquivalent(docxDocumentInstance, vNode, xmlFragment) {
               // Add lineRule attribute for consistency
               // Direct image processing includes this attribute, but HTML image processing was missing it
               // This ensures both processing paths generate identical XML structure
-              imageFragment.first().first().att('http://schemas.openxmlformats.org/wordprocessingml/2006/main', 'lineRule', 'auto');
+              imageFragment
+                .first()
+                .first()
+                .att(
+                  'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
+                  'lineRule',
+                  'auto'
+                );
               xmlFragment.import(imageFragment);
             } else {
-              console.log(`[DEBUG] findXMLEquivalent: buildImage returned null/undefined in figure`);
+              console.log(
+                `[DEBUG] findXMLEquivalent: buildImage returned null/undefined in figure`
+              );
             }
           }
         }
@@ -332,7 +361,10 @@ async function findXMLEquivalent(docxDocumentInstance, vNode, xmlFragment) {
         // Add lineRule attribute for consistency
         // Direct image processing includes this attribute, but HTML image processing was missing it
         // This ensures both processing paths generate identical XML structure
-        imageFragment.first().first().att('http://schemas.openxmlformats.org/wordprocessingml/2006/main', 'lineRule', 'auto');
+        imageFragment
+          .first()
+          .first()
+          .att('http://schemas.openxmlformats.org/wordprocessingml/2006/main', 'lineRule', 'auto');
         xmlFragment.import(imageFragment);
       } else {
         console.log(`[DEBUG] findXMLEquivalent: buildImage returned null/undefined`);

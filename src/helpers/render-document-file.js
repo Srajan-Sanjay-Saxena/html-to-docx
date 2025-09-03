@@ -1,5 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-case-declarations */
+/* eslint-disable no-console */
+/* eslint-disable no-plusplus */
 import { fragment } from 'xmlbuilder2';
 import VNode from 'virtual-dom/vnode/vnode.js';
 import VText from 'virtual-dom/vnode/vtext.js';

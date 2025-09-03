@@ -4,6 +4,11 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-else-return */
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-continue */
+/* eslint-disable eqeqeq */
+/* eslint-disable no-lonely-if */
 import { fragment } from 'xmlbuilder2';
 import isVNode from 'virtual-dom/vnode/is-vnode.js';
 import isVText from 'virtual-dom/vnode/is-vtext.js';
@@ -59,7 +64,7 @@ import {
 } from '../constants.js';
 import { vNodeHasChildren } from '../utils/vnode.js';
 import { isValidUrl } from '../utils/url.js';
-import { isZeroOrTruthy } from '../utils/truthy-check.js';
+import isZeroOrTruthy from '../utils/truthy-check.js';
 
 const { cloneDeep } = _;
 
@@ -90,8 +95,6 @@ const setBorderIndexEquivalent = (index, length) => {
   if (index === length - 1) return 'last';
   return 'middle';
 };
-
-
 
 const isTextDecorationLine = (line) =>
   ['overline', 'underline', 'line-through', 'blink', 'none'].includes(line);

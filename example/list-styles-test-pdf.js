@@ -1,3 +1,4 @@
+/* eslint-disable no-console, no-underscore-dangle, import/no-extraneous-dependencies */
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -28,8 +29,8 @@ async function generateListStylesTestPdf() {
         top: '20mm',
         right: '20mm',
         bottom: '20mm',
-        left: '20mm'
-      }
+        left: '20mm',
+      },
     });
 
     await browser.close();

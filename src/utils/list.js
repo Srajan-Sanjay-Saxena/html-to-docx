@@ -51,6 +51,7 @@ class ListStyleBuilder {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getUnorderedListPrefixSuffix(style) {
     let listType = '';
 

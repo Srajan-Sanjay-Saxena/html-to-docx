@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
+/* eslint-disable no-console, no-underscore-dangle */
 const fs = require('fs');
 // FIXME: Incase you have the npm package
 // const HTMLtoDOCX = require('html-to-docx');
-const HTMLtoDOCX = require('../dist/html-to-docx.umd');
+const HTMLtoDOCX = require('../dist/html-to-docx.umd.js');
 
 const filePath = './example.docx';
 

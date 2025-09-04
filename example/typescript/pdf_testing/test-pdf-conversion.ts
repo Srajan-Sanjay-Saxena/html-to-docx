@@ -1,5 +1,5 @@
 import { existsSync } from 'fs';
-import { convertToPDF, isLibreOfficeAvailable } from './pdfCreator.js';
+import { convertToPDF, isLibreOfficeAvailable } from './pdf-creator';
 
 async function testPDFConversion() {
   try {

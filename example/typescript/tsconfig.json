@@ -13,10 +13,6 @@
       "@turbodocx/html-to-docx": ["../../"]
     }
   },
-  "include": [
-    "*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
-} 
+  "include": ["*.ts", "pdf_testing/pdf-creator.ts"],
+  "exclude": ["node_modules"]
+}
